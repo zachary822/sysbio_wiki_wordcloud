@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='sysbio_wiki_wordcloud',
     version='1.0.0',
-    description="Making a word cloud from Christine Vogel's Systems Biology Wiki.",
+    description="Making a word cloud from Dr. Christine Vogel's Systems Biology Wiki.",
     author="Che-Lun Juang",
     entry_points={
         'console_scripts': [
