@@ -1,3 +1,5 @@
 # Systems Biology Wordcloud Generator
 
-TBA
+## Result
+
+![word cloud](docs/images/wordcloud.png)

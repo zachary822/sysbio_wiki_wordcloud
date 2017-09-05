@@ -1,4 +1,3 @@
-import argparse
 from typing import Generator
 from urllib.parse import urldefrag
 
@@ -22,7 +21,7 @@ def get_text_from_pages(driver: WebDriver) -> Generator[str, None, None]:
         yield from get_text_from_page(driver)
 
 
-def save_word_cloud(name):
+def save_word_cloud(name, width: int = 1920, height: int = 1080) -> None:
     driver = Chrome()
 
     driver.get("https://wikis.nyu.edu/display/Vogel/Systems+Biology")
@@ -35,7 +34,7 @@ def save_word_cloud(name):
 
         text = ' '.join(get_text_from_pages(driver))
 
-        wordcloud = WordCloud(width=1920, height=1080).generate(text)
+        wordcloud = WordCloud(width=width, height=height).generate(text)
 
         image = wordcloud.to_image()
 
@@ -45,16 +44,3 @@ def save_word_cloud(name):
         pass
 
     driver.quit()
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", help="Output file name.", default="wordcloud.png")
-
-    args = parser.parse_args()
-
-    save_word_cloud(args.output)
-
-
-if __name__ == "__main__":
-    main()

@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='sysbio_wiki_wordcloud',
@@ -7,7 +7,7 @@ setup(
     author="Che-Lun Juang",
     entry_points={
         'console_scripts': [
-            'sysbio_wiki_wordcloud=sysbio_wiki_wordcloud:main',
+            'sysbio_wiki_wordcloud=sysbio_wiki_wordcloud.__main__:main',
         ],
     },
     license="MIT",
@@ -16,5 +16,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
     ],
-    packages=['selenium', 'wordcloud']
+    packages=find_packages()
 )
