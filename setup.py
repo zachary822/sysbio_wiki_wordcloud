@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name='sysbio_wiki_wordcloud',
@@ -16,5 +16,10 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
     ],
-    packages=find_packages()
+    packages=find_packages(),
+    include_package_data=True,
+    package_data={
+        '': ['*.txt', '*.md'],
+        'sysbio_wiki_wordcloud': ['stopwords']
+    }
 )

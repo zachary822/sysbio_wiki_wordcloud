@@ -5,6 +5,12 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webdriver import WebDriver
 from wordcloud import WordCloud
+import os
+
+from wordcloud import STOPWORDS
+
+STOPWORDS |= set([x.strip() for x in open(
+    os.path.join(os.path.dirname(__file__), 'stopwords')).read().split('\n')])
 
 __all__ = ['save_word_cloud']
 
@@ -36,7 +42,7 @@ def save_word_cloud(name, width: int = 1920, height: int = 1080) -> None:
 
         text = ' '.join(get_text_from_pages(driver))
 
-        wordcloud = WordCloud(width=width, height=height).generate(text)
+        wordcloud = WordCloud(width=width, height=height, stopwords=STOPWORDS).generate(text)
 
         image = wordcloud.to_image()
 
