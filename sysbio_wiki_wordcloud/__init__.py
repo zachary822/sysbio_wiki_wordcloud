@@ -40,7 +40,7 @@ def save_word_cloud(name, width: int = 1920, height: int = 1080) -> None:
 
         image = wordcloud.to_image()
 
-        image.save(name, optimize=True)
+        image.save(name)
 
     except NoSuchElementException:
         pass
