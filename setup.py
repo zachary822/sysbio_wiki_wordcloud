@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='sysbio_wiki_wordcloud',
-    version='1.0.0',
+    version='1.0.1',
     description="Making a word cloud from Dr. Christine Vogel's Systems Biology Wiki.",
     author="Che-Lun Juang",
     entry_points={
@@ -19,7 +19,6 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={
-        '': ['*.txt', '*.md'],
         'sysbio_wiki_wordcloud': ['stopwords']
     }
 )

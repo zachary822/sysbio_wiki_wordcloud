@@ -1,13 +1,17 @@
 import os
+from datetime import datetime
 from typing import Generator, Set
 from urllib.parse import urldefrag
 
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+import matplotlib
+
+matplotlib.use('Agg')
+
+from PIL import Image, ImageDraw, ImageFont
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.remote.webdriver import WebDriver
 from wordcloud import STOPWORDS, WordCloud
-from PIL import Image
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
@@ -53,13 +57,14 @@ def get_image(driver: WebDriver, width: int = 1920, height: int = 1080) -> Image
     return wordcloud.to_image()
 
 
-def save_word_cloud(name, width: int = 1920, height: int = 1080, *args, **kwargs) -> None:
+def save_word_cloud(name, width: int = 1920, height: int = 1080, timestamp: bool = True, *args, **kwargs) -> None:
     """
     Get word cloud from Systems Biology Wiki
 
     :param name: name of file
     :param width: output file width
     :param height: output file height
+    :param timestamp: include timestamp
     :param args: extra arguments passed to Pillow.Image.save
     :param kwargs: extra arguments passed to Pillow.Image.save
     :return: None
@@ -71,7 +76,22 @@ def save_word_cloud(name, width: int = 1920, height: int = 1080, *args, **kwargs
     try:
         image = get_image(driver, width, height)
 
+        if timestamp:
+            date_str = datetime.now().isoformat()
+            draw = ImageDraw.Draw(image)
+
+            i_width, i_height = image.size
+
+            font = ImageFont.truetype("Hack-Regular.ttf", size=20)
+
+            f_width, f_height = draw.textsize(date_str, font=font)
+
+            x = i_width - f_width - 20
+            y = i_height - f_height - 20
+
+            draw.text((x, y), date_str, font=font)
+
         image.save(name, *args, **kwargs)
-        
+
     finally:
         driver.quit()
