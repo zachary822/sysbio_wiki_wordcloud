@@ -11,9 +11,8 @@ A program that generates a word cloud for Dr. Christine Vogel's
 
 ### Disclamer
 
-This depends on `chromedriver` and the Chromium Browser or 
-[Google Chrome](https://www.google.com/chrome/browser/desktop/index.html), 
-you might have to install both before beginning.
+This depends on `chromedriver` and either the Chromium Browser or 
+[Google Chrome](https://www.google.com/chrome/browser/desktop/index.html).
 
 #### Install `chromedriver` for MacOS
 
