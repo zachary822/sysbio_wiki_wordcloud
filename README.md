@@ -9,25 +9,6 @@ A program that generates a word cloud for Dr. Christine Vogel's
 
 ## Installation
 
-### Disclamer
-
-This depends on `chromedriver` and either the Chromium Browser or 
-[Google Chrome](https://www.google.com/chrome/browser/desktop/index.html).
-
-#### Install `chromedriver` for MacOS
-
-```bash
-brew install chromedriver
-```
-
-#### Install `chromedriver` for Linux
-
-```bash
-sudo apt install chromium-chromedriver
-```
-
-### Install Package
-
 ```bash
 git clone https://github.com/zachary822/sysbio_wiki_wordcloud.git
 cd sysbio_wiki_wordcloud
