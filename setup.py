@@ -22,7 +22,8 @@ setup(
         'beautifulsoup4',
         'matplotlib',
         'Pillow',
-        'wordcloud'
+        'wordcloud',
+        'lxml'
     ],
     include_package_data=True,
     package_data={
