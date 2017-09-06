@@ -6,6 +6,8 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webdriver import WebDriver
 from wordcloud import WordCloud
 
+__all__ = ['save_word_cloud']
+
 
 def get_text_from_page(driver: WebDriver) -> Generator[str, None, None]:
     texts = driver.find_elements_by_xpath(

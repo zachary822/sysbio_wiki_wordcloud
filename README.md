@@ -17,10 +17,22 @@ python3 setup.py install
 
 ## Usage
 
+### CLI
+
 ```bash
 # use the -h option to see detailed description
 sysbio_wiki_wordcloud -o [OUTPUT] --width [WIDTH] --height [HEIGHT]
 ```
+
+### Programmatic
+
+```python
+import sysbio_wiki_wordcloud
+
+sysbio_wiki_wordcloud.save_word_cloud("wordcloud.png", width=1920, height=1080)
+```
+
+This generates a wordcloud file of specific width and height.
 
 ## Result
 
