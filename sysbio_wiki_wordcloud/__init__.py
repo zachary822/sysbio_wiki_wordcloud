@@ -31,9 +31,7 @@ def get_links(session: requests.Session) -> Set[str]:
 
     link_soup = BeautifulSoup(link_page.content, 'lxml', parse_only=only_wiki)
 
-    link_tree = link_soup.find('div', id="children68296313-0")
-
-    return {urljoin(LINK_URL, l['href']) for l in link_tree.find_all('a', attrs={'class': False})}
+    return {urljoin(LINK_URL, l['href']) for l in link_soup.find_all('a', attrs={'class': False})}
 
 
 def get_text_from_page(resp: requests.Response) -> str:
@@ -46,7 +44,7 @@ def get_text_from_pages(session: requests.Session) -> Generator[str, None, None]
         yield get_text_from_page(session.get(link))
 
 
-def get_image(width: int = 1920, height: int = 1080) -> Image:
+def get_wordcloud_image(width: int = 1920, height: int = 1080) -> Image:
     with requests.Session() as session:
         text = ' '.join(get_text_from_pages(session))
 
@@ -88,7 +86,7 @@ def save_word_cloud(name, width: int = 1920, height: int = 1080, timestamp: bool
     :param kwargs: extra arguments passed to Pillow.Image.save
     :return: None
     """
-    image = get_image(width, height)
+    image = get_wordcloud_image(width, height)
 
     if timestamp:
         draw_timestamp(image)
