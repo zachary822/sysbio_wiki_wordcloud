@@ -17,8 +17,9 @@ LINK_URL = "https://wikis.nyu.edu/plugins/pagetree/naturalchildren.action?decora
            "&reverse=false&disableLinks=false&expandCurrent=true&hasRoot=true&pageId=20608012&treeId=0&startDepth=0" \
            "&mobile=false&ancestors=68296313&ancestors=20608012&treePageId=68296315&_=1504714430704"
 
-only_wiki = SoupStrainer('div', id='children68296313-0')
+only_wiki_links = SoupStrainer('div', id='children68296313-0')
 only_main_content = SoupStrainer('div', id="main-content")
+only_comments = SoupStrainer('div', id='comments-section')
 
 with open(os.path.join(os.path.dirname(__file__), 'stopwords')) as stopwords_file:
     STOPWORDS |= set(x.strip() for x in stopwords_file.readlines())
@@ -29,7 +30,7 @@ __all__ = ['save_word_cloud']
 def get_links(session: requests.Session) -> Set[str]:
     link_page = session.get(LINK_URL)
 
-    link_soup = BeautifulSoup(link_page.content, 'lxml', parse_only=only_wiki)
+    link_soup = BeautifulSoup(link_page.content, 'lxml', parse_only=only_wiki_links)
 
     return {urljoin(LINK_URL, l['href']) for l in link_soup.find_all('a', attrs={'class': False})}
 
@@ -39,14 +40,29 @@ def get_text_from_page(resp: requests.Response) -> str:
     return soup.get_text()
 
 
-def get_text_from_pages(session: requests.Session) -> Generator[str, None, None]:
+def get_comments_from_page(resp: requests.Response) -> str:
+    soup = BeautifulSoup(resp.content, 'lxml', parse_only=only_comments)
+
+    return ' '.join(c.get_text() for c in soup.find_all('div', attrs={'class': 'comment-content'}))
+
+
+def get_text_from_pages(session: requests.Session, return_link: bool = False, comment: bool = False) -> \
+        Generator[str, None, None]:
     for link in get_links(session):
-        yield get_text_from_page(session.get(link))
+        if comment:
+            result = get_comments_from_page(session.get(link))
+        else:
+            result = get_text_from_page(session.get(link))
+
+        if return_link:
+            result = result, link
+
+        yield result
 
 
-def get_wordcloud_image(width: int = 1920, height: int = 1080) -> Image:
+def get_wordcloud_image(width: int = 1920, height: int = 1080, comment: bool = False) -> Image:
     with requests.Session() as session:
-        text = ' '.join(get_text_from_pages(session))
+        text = ' '.join(get_text_from_pages(session, comment=comment))
 
     wordcloud = WordCloud(width=width, height=height, stopwords=STOPWORDS).generate(text)
 
@@ -74,7 +90,8 @@ def draw_timestamp(image: Image, size: Union[int, None] = None) -> Image:
     return image
 
 
-def save_word_cloud(name, width: int = 1920, height: int = 1080, timestamp: bool = True, *args, **kwargs) -> None:
+def save_word_cloud(name, width: int = 1920, height: int = 1080, timestamp: bool = True, comment: bool = False,
+                    *args, **kwargs) -> None:
     """
     Get word cloud from Systems Biology Wiki
 
@@ -82,11 +99,12 @@ def save_word_cloud(name, width: int = 1920, height: int = 1080, timestamp: bool
     :param width: output file width
     :param height: output file height
     :param timestamp: include timestamp
+    :param comment: use comments instead of wiki page
     :param args: extra arguments passed to Pillow.Image.save
     :param kwargs: extra arguments passed to Pillow.Image.save
     :return: None
     """
-    image = get_wordcloud_image(width, height)
+    image = get_wordcloud_image(width, height, comment=comment)
 
     if timestamp:
         draw_timestamp(image)
